@@ -5,6 +5,8 @@ import select
 import alsaaudio
 import serial
 
+SERIAL_DEVICE = os.environ.get('ARDUINO_SERIAL_PORT', '/dev/ttyUSB0')
+
 def clamp(n, lo, hi):
     return max(lo, min(n, hi))
 
@@ -30,7 +32,7 @@ def wait_for_mixer_change((poll, mixer) = setup_poll()):
 def sleep_ms(ms):
     sleep(1 / 1000 * ms)
 
-with serial.Serial('/dev/ttyUSB0', 9600, timeout=5) as ser:
+with serial.Serial(SERIAL_DEVICE, 9600, timeout=5) as ser:
     current_volume = get_volume_as_byte()
 
     sleep(2)
