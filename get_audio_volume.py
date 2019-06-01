@@ -7,10 +7,11 @@ import alsaaudio
 import serial
 
 SERIAL_DEVICE = os.environ.get('ARDUINO_SERIAL_PORT', '/dev/ttyUSB0')
+AUDIO_CONTROL = os.environ.get('AUDIO_CONTROL', 'Master')
 AUDIO_DEVICE = os.environ.get('AUDIO_DEVICE', 'default')
 
 def get_mixer():
-    return alsaaudio.Mixer(device=AUDIO_DEVICE)
+    return alsaaudio.Mixer(device=AUDIO_DEVICE, control=AUDIO_CONTROL)
 
 def clamp(n, lo, hi):
     return max(lo, min(n, hi))
