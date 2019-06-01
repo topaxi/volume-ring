@@ -1,25 +1,30 @@
 #!/usr/bin/env python
 
+import os
 from time import sleep
 import select
 import alsaaudio
 import serial
 
 SERIAL_DEVICE = os.environ.get('ARDUINO_SERIAL_PORT', '/dev/ttyUSB0')
+AUDIO_DEVICE = os.environ.get('AUDIO_DEVICE', 'default')
+
+def get_mixer():
+    return alsaaudio.Mixer(device=AUDIO_DEVICE)
 
 def clamp(n, lo, hi):
     return max(lo, min(n, hi))
 
 def get_volume_as_byte():
     return clamp(
-        int(alsaaudio.Mixer().getvolume()[0] / 100.0 * 255),
+        int(get_mixer().getvolume()[0] / 100.0 * 255),
         0,
         255
     )
 
 
 def setup_poll():
-    mixer = alsaaudio.Mixer()
+    mixer = get_mixer()
     poll = select.poll()
     (fd, m) = mixer.polldescriptors()[0]
     poll.register(fd, m)
